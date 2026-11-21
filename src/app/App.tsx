@@ -1613,7 +1613,6 @@ function ParentEntry({
         onEdit={onEdit}
       />
       <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-x-5 gap-y-4">
-        <InfoField label="Licence no." value={parent.nationalId} />
         <InfoField label="Phone" value={parent.phone} />
         <InfoField label="Email" value={parent.email} />
         {/* Long address - spans 2 columns so it doesn't collide */}
@@ -1678,8 +1677,8 @@ function CompanionEntry({
       />
       <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-x-5 gap-y-4">
         <InfoField
-          label="ID number"
-          value={companion.nationalId}
+          label="Date of birth"
+          value={companion.dateOfBirth}
         />
         <InfoField label="Phone" value={companion.phone} />
         <InfoField label="Email" value={companion.email} />
@@ -1748,7 +1747,6 @@ const INITIAL_PARENTS: Parent[] = [
     id: "father",
     relation: "Father",
     name: "Daniel Bennett",
-    nationalId: "084 512 739",
     phone: "0423 456 789",
     email: "dan@example.com",
     address: "Unit 5, 32 Wattle Street, Bendigo VIC 3550",
@@ -1758,7 +1756,6 @@ const INITIAL_PARENTS: Parent[] = [
     id: "mother",
     relation: "Mother",
     name: "Sarah Bennett",
-    nationalId: "091 377 260",
     phone: "0434 567 890",
     email: "sarah@example.com",
     address: "Unit 5, 32 Wattle Street, Bendigo VIC 3550",
@@ -1772,7 +1769,7 @@ const INITIAL_COMPANIONS: Companion[] = [
     type: "Careers adviser",
     firstName: "Ruth",
     lastName: "Collins",
-    nationalId: "076 904 318",
+    dateOfBirth: "17/08/1979",
     phone: "0451 209 774",
     email: "ruth@example.com",
     authorized: true,

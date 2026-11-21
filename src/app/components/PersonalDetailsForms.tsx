@@ -29,7 +29,6 @@ export interface Parent {
   id: string;
   relation: string;
   name: string;
-  nationalId: string;
   phone: string;
   email: string;
   address: string;
@@ -41,7 +40,8 @@ export interface Companion {
   type: string;
   firstName: string;
   lastName: string;
-  nationalId: string;
+  /** DD/MM/YYYY - used to confirm who is calling on the applicant's behalf */
+  dateOfBirth: string;
   phone: string;
   email: string;
   authorized: boolean;
@@ -150,7 +150,7 @@ export function ParentEditDialog({
     setForm((f) => ({ ...f, [k]: v }));
 
   const valid =
-    form.name.trim() !== "" && form.nationalId.trim() !== "";
+    form.name.trim() !== "";
 
   return (
     <Dialog
@@ -173,18 +173,12 @@ export function ParentEditDialog({
       }
     >
       <div className="flex flex-col gap-4">
+        <TextField
+          label="Full name"
+          value={form.name}
+          onChange={set("name")}
+        />
         <div className="grid sm:grid-cols-2 gap-4">
-          <TextField
-            label="Full name"
-            value={form.name}
-            onChange={set("name")}
-          />
-          <TextField
-            label="Licence no."
-            value={form.nationalId}
-            onChange={set("nationalId")}
-            dir="ltr"
-          />
           <TextField
             label="Phone"
             value={form.phone}
@@ -345,7 +339,7 @@ export function CompanionWizard({
       type: "",
       firstName: "",
       lastName: "",
-      nationalId: "",
+      dateOfBirth: "",
       phone: "",
       email: "",
       authorized: true,
@@ -361,7 +355,7 @@ export function CompanionWizard({
     form.type !== "" &&
     form.firstName.trim() !== "" &&
     form.lastName.trim() !== "" &&
-    form.nationalId.trim() !== "" &&
+    /^\d{2}\/\d{2}\/\d{4}$/.test(form.dateOfBirth.trim()) &&
     form.phone.trim() !== "" &&
     form.email.trim() !== "";
 
@@ -461,10 +455,11 @@ export function CompanionWizard({
               onChange={set("lastName")}
             />
             <TextField
-              label="ID number"
-              value={form.nationalId}
-              onChange={set("nationalId")}
-              dir="ltr"
+              label="Date of birth"
+              value={form.dateOfBirth}
+              onChange={set("dateOfBirth")}
+              placeholder="DD/MM/YYYY"
+              inputMode="numeric"
             />
             <TextField
               label="Mobile"

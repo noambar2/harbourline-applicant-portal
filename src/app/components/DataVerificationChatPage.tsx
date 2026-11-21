@@ -55,7 +55,7 @@ interface Relative {
   relation: string;
   firstName: string;
   lastName: string;
-  nationalId: string;
+  email: string;
   phone: string;
   /** null - not yet known whether they live at the same address */
   sameAddress: boolean | null;
@@ -63,7 +63,7 @@ interface Relative {
   address: string;
 }
 
-type RelativeField = "phone" | "nationalId" | "name" | "address";
+type RelativeField = "phone" | "email" | "name" | "address";
 
 interface Data {
   address: Address;
@@ -95,7 +95,7 @@ const INITIAL_DATA: Data = {
       relation: "Father",
       firstName: "Daniel",
       lastName: "Bennett",
-      nationalId: "211716293",
+      email: "dan@example.com",
       phone: "0423456789",
       sameAddress: false,
       address: "Unit 5, 32 Wattle Street, Bendigo",
@@ -104,7 +104,7 @@ const INITIAL_DATA: Data = {
       relation: "Mother",
       firstName: "Sarah",
       lastName: "Bennett",
-      nationalId: "",
+      email: "",
       phone: "0434567890",
       sameAddress: null,
       address: "",
@@ -314,12 +314,8 @@ const relativeCard = (d: Data, i: 0 | 1) => {
       rows={[
         { label: "Relationship", value: r.relation },
         { label: "Full name", value: fullName(r), key: k("name") },
-        {
-          label: "Licence no.",
-          value: r.nationalId,
-          key: k("nationalId"),
-        },
         { label: "Phone", value: fmtPhone(r.phone), key: k("phone") },
+        { label: "Email", value: r.email, key: k("email") },
         {
           label: "Address",
           value: relativeAddress(r, d),
@@ -443,7 +439,7 @@ type StepId =
   | "phone"
   | "phoneNew"
   | "rel1"
-  | "rel2Id"
+  | "rel2Email"
   | "rel2Addr"
   | "rel2AddrText"
   | "rel2"
@@ -499,14 +495,14 @@ const validPhone = (v: string) =>
     ? null
     : "A mobile number needs 10 digits starting with 04, e.g. 0412 345 678.";
 
-const validId = (v: string) =>
-  digits(v).length === 9
+const validEmail = (v: string) =>
+  /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim())
     ? null
-    : "A licence number needs 9 digits.";
+    : "That doesn't look like an email address - e.g. name@example.com.";
 
 const RELATIVE_FIELDS: Record<RelativeField, string> = {
   phone: "Phone",
-  nationalId: "Licence no.",
+  email: "Email",
   name: "Name",
   address: "Address",
 };
@@ -672,25 +668,25 @@ const STEPS: Record<StepId, Step> = {
       v === "yes"
         ? {
             data: { ...d, cursor: { ...d.cursor, rel: 1 } },
-            next: d.relatives[1].nationalId ? "rel2" : "rel2Id",
+            next: d.relatives[1].email ? "rel2" : "rel2Email",
           }
         : {
             data: { ...d, cursor: { ...d.cursor, rel: 0 } },
             next: "relFixPick",
           },
   },
-  rel2Id: {
+  rel2Email: {
     section: 1,
     enter: (d) => [
       {
-        text: `I've already found your second contact, **${fullName(d.relatives[1])} (${d.relatives[1].relation})** - but I'm missing her licence number.`,
+        text: `I've already found your second contact, **${fullName(d.relatives[1])} (${d.relatives[1].relation})** - but I'm missing her email address.`,
         card: relativeCard(d, 1),
-        ask: "What's her licence number?",
+        ask: "What's her email address?",
       },
     ],
-    text: { placeholder: "9 digits", numeric: true, validate: validId },
+    text: { placeholder: "name@example.com", validate: validEmail },
     answer: (v, d) => ({
-      data: setRelative(d, 1, { nationalId: digits(v) }, "nationalId"),
+      data: setRelative(d, 1, { email: v.trim() }, "email"),
       next: "rel2Addr",
     }),
   },
@@ -769,7 +765,7 @@ const STEPS: Record<StepId, Step> = {
       const r = d.relatives[d.cursor.rel];
       const prompts: Record<RelativeField, string> = {
         phone: `What's ${r.firstName}'s phone number?`,
-        nationalId: `What's ${r.firstName}'s licence number?`,
+        email: `What's ${r.firstName}'s email address?`,
         name: "What's the full name (first and last)?",
         address: `What's ${r.firstName}'s address?`,
       };
@@ -782,8 +778,8 @@ const STEPS: Record<StepId, Step> = {
       const error =
         field === "phone"
           ? validPhone(value)
-          : field === "nationalId"
-            ? validId(value)
+          : field === "email"
+            ? validEmail(value)
             : field === "name" && value.split(/\s+/).length < 2
               ? "I need a first name and a last name."
               : null;
@@ -792,8 +788,8 @@ const STEPS: Record<StepId, Step> = {
       const patch: Partial<Relative> =
         field === "phone"
           ? { phone: digits(value) }
-          : field === "nationalId"
-            ? { nationalId: digits(value) }
+          : field === "email"
+            ? { email: value }
             : field === "name"
               ? { firstName, lastName: rest.join(" ") }
               : { sameAddress: false, address: value };
@@ -803,9 +799,9 @@ const STEPS: Record<StepId, Step> = {
         next:
           rel === 0
             ? "rel1"
-            : d.relatives[1].nationalId || field === "nationalId"
+            : d.relatives[1].email || field === "email"
               ? "rel2"
-              : "rel2Id",
+              : "rel2Email",
       };
     },
   },
