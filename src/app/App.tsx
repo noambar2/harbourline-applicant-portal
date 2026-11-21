@@ -1498,27 +1498,23 @@ const SCHOOLS = [
   },
 ];
 
-/** Year 12 subjects - subject, units, and an extension-study flag (not compulsory) */
-const BAGRUT: {
+/** VCE subjects - subject, study score (out of 50), and whether it was completed early in Year 11 */
+const VCE_SUBJECTS: {
   subject: string;
-  units: number;
-  extension?: boolean;
+  score: number;
+  early?: boolean;
 }[] = [
-  { subject: "English", units: 4 },
-  { subject: "Maths Methods", units: 4 },
-  { subject: "Specialist Maths", units: 4 },
-  { subject: "Physics", units: 4 },
-  { subject: "Chemistry", units: 2 },
-  { subject: "History", units: 2 },
-  { subject: "Legal Studies", units: 2 },
-  { subject: "Systems Engineering", units: 4 },
-  { subject: "Art", units: 4, extension: true },
-  { subject: "Geography", units: 2 },
+  { subject: "English", score: 38 },
+  { subject: "Mathematical Methods", score: 36 },
+  { subject: "Specialist Mathematics", score: 34 },
+  { subject: "Physics", score: 37 },
+  { subject: "Chemistry", score: 33 },
+  { subject: "Psychology", score: 41, early: true },
 ];
 
 function EducationContent() {
   return (
-    // On desktop: schools and Year 12 subjects side by side with a divider
+    // On desktop: schools and VCE subjects side by side with a divider
     <div className="p-5 grid md:grid-cols-2 gap-5 md:gap-0">
       <div className="md:pr-5 md:border-r md:border-[rgba(23,28,35,0.08)] flex flex-col gap-4">
         {SCHOOLS.map(({ stage, name, years }) => (
@@ -1534,13 +1530,13 @@ function EducationContent() {
       </div>
       {/* On mobile the subjects drop to their own column - a divider between the two parts */}
       <div className="md:pl-5 pt-5 border-t border-[rgba(23,28,35,0.05)] md:pt-0 md:border-t-0">
-        <SubSection title="Year 12 subjects" />
+        <SubSection title="VCE subjects" />
         <div className="flex flex-wrap gap-2">
-          {BAGRUT.map(({ subject, units, extension }) => (
+          {VCE_SUBJECTS.map(({ subject, score, early }) => (
             <div
               key={subject}
               className={`flex items-center gap-1.5 rounded-full px-3.5 py-1.5 ${
-                extension
+                early
                   ? "bg-[rgba(105,198,0,0.1)] border border-[rgba(105,198,0,0.45)]"
                   : "bg-white border border-[rgba(0,143,240,0.35)]"
               }`}
@@ -1549,22 +1545,22 @@ function EducationContent() {
                 {subject}
               </span>
               <span
-                className={`text-[13px] font-bold whitespace-nowrap ${extension ? "text-[#4e9400]" : "text-[#008ff0]"}`}
+                className={`text-[13px] font-bold whitespace-nowrap ${early ? "text-[#4e9400]" : "text-[#008ff0]"}`}
               >
-                · {units} units
+                · {score}
               </span>
-              {/* Extension study - distinguished from core subjects */}
-              {extension && (
+              {/* Completed early, in Year 11 - distinguished from the Year 12 subjects */}
+              {early && (
                 <span className="text-[#4e9400] text-[11px] font-semibold whitespace-nowrap bg-[rgba(105,198,0,0.16)] rounded-full px-1.5 py-0.5">
-                  Extension
+                  Year 11
                 </span>
               )}
             </div>
           ))}
         </div>
         <p className="text-[#171c23] text-[12px] opacity-50 mt-3">
-          Subjects in green are extension studies; the rest are core
-          subjects
+          Study scores out of 50 · ATAR 92.45. The subject in green
+          was completed early, in Year 11
         </p>
       </div>
     </div>
