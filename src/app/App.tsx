@@ -906,7 +906,7 @@ function Header({
                 <Menu size={22} />
               )}
             </button>
-            <HarbourlineLogo className="h-[32px] pb-2" />
+            <HarbourlineLogo className="h-[24px]" />
           </div>
           <div className="flex items-center gap-4">
             <Search size={17} />
