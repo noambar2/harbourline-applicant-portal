@@ -1,11 +1,11 @@
 import { createContext, useContext, type ReactNode } from "react";
-import profileHero from "../../imports/heroes/profile.svg";
-import tasksHero from "../../imports/heroes/tasks.svg";
-import learningsHero from "../../imports/heroes/learnings.svg";
-import appointmentsHero from "../../imports/heroes/appointments.svg";
-import messagesHero from "../../imports/heroes/messages.svg";
-import inquiriesHero from "../../imports/heroes/inquiries.svg";
-import settingsHero from "../../imports/heroes/settings.svg";
+import profileHero from "../../imports/heroes/profile.jpg";
+import tasksHero from "../../imports/heroes/tasks.jpg";
+import learningsHero from "../../imports/heroes/learnings.jpg";
+import appointmentsHero from "../../imports/heroes/appointments.jpg";
+import messagesHero from "../../imports/heroes/messages.jpg";
+import inquiriesHero from "../../imports/heroes/inquiries.jpg";
+import settingsHero from "../../imports/heroes/settings.jpg";
 
 /** Whether the site shows the classic version (photo heroes at the top of each page) */
 export const ClassicVersionContext = createContext(false);
@@ -24,38 +24,38 @@ const HEROES: Record<string, Hero> = {
   profile: {
     title: "Hello Olivia",
     image: profileHero,
-    // The skyline runs behind the card, so the glass gets both sky and campus
-    position: "center 72%",
+    // The facade runs behind the card, so the glass picks up both sky and stone
+    position: "center 48%",
   },
   tasks: {
     title: "Tasks",
     image: tasksHero,
-    position: "center 72%",
+    position: "center 55%",
   },
   learnings: {
     title: "Modules",
     image: learningsHero,
-    position: "center 72%",
+    position: "center 50%",
   },
   appointments: {
     title: "Bookings",
     image: appointmentsHero,
-    position: "center 72%",
+    position: "center 60%",
   },
   messages: {
     title: "Messages",
     image: messagesHero,
-    position: "center 72%",
+    position: "center 22%",
   },
   inquiries: {
     title: "Enquiries",
     image: inquiriesHero,
-    position: "center 72%",
+    position: "center 8%",
   },
   settings: {
     title: "Settings",
     image: settingsHero,
-    position: "center 72%",
+    position: "center 40%",
   },
 };
 
