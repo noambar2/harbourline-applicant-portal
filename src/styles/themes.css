@@ -1,0 +1,603 @@
+/*
+  Themes - Harbourline Applicant Portal
+  ──────────────────────────
+  The system is built on a small canonical colour set, so switching theme is a single
+  override layer: the canonical colour classes take their values from the CSS variables
+  the theme injects (--brand / --brand-hover / --brand-rgb), and dark surfaces load under .dark.
+
+  See src/app/themes.ts for the theme definitions.
+*/
+
+/* ════════ Mobile type scale ════════ */
+/*
+  On mobile (up to 767px - same breakpoint as useIsMobile) every text size drops
+  one step, so the whole system shrinks together without touching each screen.
+  Changing a class size here changes it across the whole app.
+*/
+
+@media (max-width: 767px) {
+  .text-\[10px\] { font-size: 9px; }
+  .text-\[11px\] { font-size: 10px; }
+  .text-\[12px\] { font-size: 11px; }
+  .text-\[13px\] { font-size: 12px; }
+  .text-\[14px\] { font-size: 13px; }
+  .text-\[15px\] { font-size: 14px; }
+  .text-\[16px\] { font-size: 15px; }
+  .text-\[18px\] { font-size: 16px; }
+  .text-\[20px\] { font-size: 18px; }
+  .text-\[22px\] { font-size: 20px; }
+  .text-\[24px\] { font-size: 21px; }
+  .text-\[26px\] { font-size: 23px; }
+  .text-\[28px\] { font-size: 25px; }
+  .text-\[30px\] { font-size: 26px; }
+  .text-\[32px\] { font-size: 28px; }
+  .text-\[34px\] { font-size: 30px; }
+  .text-\[44px\] { font-size: 38px; }
+  .text-\[52px\] { font-size: 44px; }
+}
+
+/*
+  The sm: variants only apply from 640px, so their reduction is limited to the
+  640-767 range. Without this bound they would override the base size on phones
+  too (the class is present on the element even when inactive).
+*/
+@media (min-width: 640px) and (max-width: 767px) {
+  .sm\:text-\[13px\] { font-size: 12px; }
+  .sm\:text-\[14px\] { font-size: 13px; }
+  .sm\:text-\[15px\] { font-size: 14px; }
+  .sm\:text-\[16px\] { font-size: 15px; }
+  .sm\:text-\[22px\] { font-size: 20px; }
+  .sm\:text-\[24px\] { font-size: 21px; }
+  .sm\:text-\[34px\] { font-size: 30px; }
+  .sm\:text-\[52px\] { font-size: 44px; }
+}
+
+/* ════════ Brand colour ════════ */
+
+.bg-\[\#008ff0\] {
+  background-color: var(--brand, #008ff0);
+}
+.text-\[\#008ff0\] {
+  color: var(--brand, #008ff0);
+}
+.border-\[\#008ff0\] {
+  border-color: var(--brand, #008ff0);
+}
+.hover\:bg-\[\#0080d6\]:hover {
+  background-color: var(--brand-hover, #0080d6);
+}
+.hover\:bg-\[\#008ff0\]:hover {
+  background-color: var(--brand, #008ff0);
+}
+.hover\:border-\[\#008ff0\]:hover,
+.focus\:border-\[\#008ff0\]:focus {
+  border-color: var(--brand, #008ff0);
+}
+
+/* Brand transparency tints */
+.bg-\[rgba\(0\,143\,240\,0\.06\)\] {
+  background-color: rgba(var(--brand-rgb, 0, 143, 240), 0.06);
+}
+.bg-\[rgba\(0\,143\,240\,0\.08\)\] {
+  background-color: rgba(var(--brand-rgb, 0, 143, 240), 0.08);
+}
+.bg-\[rgba\(0\,143\,240\,0\.1\)\] {
+  background-color: rgba(var(--brand-rgb, 0, 143, 240), 0.1);
+}
+.bg-\[rgba\(0\,143\,240\,0\.12\)\] {
+  background-color: rgba(var(--brand-rgb, 0, 143, 240), 0.12);
+}
+.hover\:bg-\[rgba\(0\,143\,240\,0\.06\)\]:hover {
+  background-color: rgba(var(--brand-rgb, 0, 143, 240), 0.06);
+}
+.hover\:bg-\[rgba\(0\,143\,240\,0\.08\)\]:hover {
+  background-color: rgba(var(--brand-rgb, 0, 143, 240), 0.08);
+}
+.hover\:bg-\[rgba\(0\,143\,240\,0\.18\)\]:hover {
+  background-color: rgba(var(--brand-rgb, 0, 143, 240), 0.18);
+}
+.border-\[rgba\(0\,143\,240\,0\.35\)\] {
+  border-color: rgba(var(--brand-rgb, 0, 143, 240), 0.35);
+}
+.hover\:border-\[rgba\(0\,143\,240\,0\.2\)\]:hover {
+  border-color: rgba(var(--brand-rgb, 0, 143, 240), 0.2);
+}
+
+/* Brand glow on hover - chips and interactive cards */
+.hover\:shadow-\[0_0_20px_0_rgba\(0\,143\,240\,0\.25\)\]:hover {
+  box-shadow: 0 0 20px 0 rgba(var(--brand-rgb, 0, 143, 240), 0.25);
+}
+
+/* ════════ Ink - text, lines and neutral backgrounds ════════ */
+/*
+  Every "ink" colour derives from a variable whose default equals the original value, so a
+  theme that doesn't touch ink looks exactly as before. A dark surface (see the "App" theme)
+  redefines the variables on itself, and all its descendants inherit them.
+*/
+
+.text-\[\#171c23\] {
+  color: var(--ink, #171c23);
+}
+.text-\[\#122736\] {
+  color: var(--ink-strong, #122736);
+}
+.text-\[rgba\(23\,28\,35\,0\.62\)\] {
+  color: var(--ink-62, rgba(23, 28, 35, 0.62));
+}
+.text-\[rgba\(23\,28\,35\,0\.5\)\] {
+  color: var(--ink-50, rgba(23, 28, 35, 0.5));
+}
+.text-\[rgba\(23\,28\,35\,0\.4\)\] {
+  color: var(--ink-40, rgba(23, 28, 35, 0.4));
+}
+.placeholder\:text-\[rgba\(23\,28\,35\,0\.4\)\]::placeholder {
+  color: var(--ink-40, rgba(23, 28, 35, 0.4));
+}
+
+/* Semantic colours */
+.text-\[\#4e9400\] {
+  color: var(--ink-success, #3f7700);
+}
+.text-\[\#e07000\] {
+  color: var(--ink-warn, #a85200);
+}
+.text-\[\#c43c3c\] {
+  color: var(--ink-danger, #c43c3c);
+}
+
+/* Dividers and borders */
+.border-\[rgba\(23\,28\,35\,0\.05\)\] {
+  border-color: var(--line-05, rgba(23, 28, 35, 0.05));
+}
+.border-\[rgba\(23\,28\,35\,0\.06\)\] {
+  border-color: var(--line-06, rgba(23, 28, 35, 0.06));
+}
+.border-\[rgba\(23\,28\,35\,0\.08\)\] {
+  border-color: var(--line-08, rgba(23, 28, 35, 0.08));
+}
+.border-\[rgba\(23\,28\,35\,0\.1\)\] {
+  border-color: var(--line-10, rgba(23, 28, 35, 0.1));
+}
+.border-\[rgba\(23\,28\,35\,0\.12\)\] {
+  border-color: var(--line-12, rgba(23, 28, 35, 0.12));
+}
+.border-\[rgba\(23\,28\,35\,0\.25\)\] {
+  border-color: var(--line-25, rgba(23, 28, 35, 0.25));
+}
+.border-\[rgba\(23\,28\,35\,0\.3\)\] {
+  border-color: var(--line-30, rgba(23, 28, 35, 0.3));
+}
+
+/* Ink backgrounds - neutral tags, progress bar track, switch off */
+.bg-\[rgba\(23\,28\,35\,0\.06\)\] {
+  background-color: var(--ink-bg-06, rgba(23, 28, 35, 0.06));
+}
+.bg-\[rgba\(23\,28\,35\,0\.08\)\] {
+  background-color: var(--ink-bg-08, rgba(23, 28, 35, 0.08));
+}
+.hover\:bg-\[rgba\(23\,28\,35\,0\.08\)\]:hover {
+  background-color: var(--ink-bg-10, rgba(23, 28, 35, 0.08));
+}
+.bg-\[rgba\(23\,28\,35\,0\.1\)\] {
+  background-color: var(--ink-bg-10, rgba(23, 28, 35, 0.1));
+}
+.bg-\[rgba\(23\,28\,35\,0\.15\)\] {
+  background-color: var(--ink-bg-15, rgba(23, 28, 35, 0.15));
+}
+.bg-\[rgba\(23\,28\,35\,0\.2\)\] {
+  background-color: var(--ink-bg-20, rgba(23, 28, 35, 0.2));
+}
+.bg-\[rgba\(23\,28\,35\,0\.3\)\] {
+  background-color: var(--ink-bg-30, rgba(23, 28, 35, 0.3));
+}
+.bg-\[\#e3e4e5\] {
+  background-color: var(--chip-neutral, #e3e4e5);
+}
+
+/* ════════ "App" theme - light page with navy surfaces ════════ */
+/*
+  Unlike the dark theme, only the cards are dark and the page stays light - just
+  like the existing app. So the ink inversion sits on the surface itself (inherited
+  by descendants) rather than on the page root.
+*/
+.navy-cards .bg-white,
+.navy-cards .bg-white\/90,
+.navy-cards .bg-white\/95,
+.navy-cards .bg-white\/30,
+.navy-cards .hover\:bg-white:hover {
+  background-color: var(--surface, #122736);
+
+  --ink: #eaf0f5;
+  --ink-strong: #eaf0f5;
+  --ink-62: rgba(234, 240, 245, 0.64);
+  --ink-50: rgba(234, 240, 245, 0.52);
+  --ink-40: rgba(234, 240, 245, 0.42);
+  --ink-success: #93da3a;
+  --ink-warn: #f5a253;
+  --ink-danger: #e57575;
+
+  --line-05: rgba(255, 255, 255, 0.06);
+  --line-06: rgba(255, 255, 255, 0.07);
+  --line-08: rgba(255, 255, 255, 0.1);
+  --line-10: rgba(255, 255, 255, 0.13);
+  --line-12: rgba(255, 255, 255, 0.16);
+  --line-25: rgba(255, 255, 255, 0.3);
+  --line-30: rgba(255, 255, 255, 0.35);
+
+  --ink-bg-06: rgba(255, 255, 255, 0.08);
+  --ink-bg-08: rgba(255, 255, 255, 0.1);
+  --ink-bg-10: rgba(255, 255, 255, 0.12);
+  --ink-bg-15: rgba(255, 255, 255, 0.2);
+  --ink-bg-20: rgba(255, 255, 255, 0.25);
+  --ink-bg-30: rgba(255, 255, 255, 0.35);
+  --chip-neutral: #2a3a47;
+  --gauge-track: rgba(255, 255, 255, 0.1);
+}
+
+/* Secondary surface inside a card (ghost button, inner panel) */
+.navy-cards .bg-\[\#f5f5f7\] {
+  background-color: var(--surface-inset, #1c3346);
+}
+
+/* Glass card border - subtle on navy */
+.navy-cards .border-white\/50 {
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+/* ════════ "Colourful" theme - soft, playful style ════════ */
+/*
+  Only the colourful theme gets this class; other themes are unaffected.
+  The hue itself comes from the brand variables, which change per page.
+*/
+
+.playful .rounded-\[10px\] {
+  border-radius: 20px;
+}
+.playful .rounded-\[8px\] {
+  border-radius: 14px;
+}
+
+/* Cards - pastel tint of the page and a coloured shadow instead of white and grey */
+.playful .bg-white {
+  background-color: color-mix(in srgb, var(--brand) 6%, #fff);
+  box-shadow: 0 10px 28px
+    rgba(var(--brand-rgb, 0, 143, 240), 0.16);
+}
+
+/* Secondary surface inside a card (ghost button, inner panel) */
+.playful .bg-\[\#f5f5f7\] {
+  background-color: color-mix(in srgb, var(--brand) 12%, #fff);
+}
+
+/* The top header stays navy, as in every other theme */
+
+/* Primary buttons - gradient from the main hue to the secondary hue */
+.playful .bg-\[\#008ff0\] {
+  background-image: linear-gradient(
+    135deg,
+    var(--brand) 0%,
+    color-mix(in srgb, var(--accent-2) 55%, var(--brand)) 100%
+  );
+}
+
+/* The dot at the end of every heading - in the page's secondary colour */
+.playful .text-\[\#69c600\] {
+  color: var(--accent-2);
+}
+
+/* Brand-coloured icons and tags - slightly more saturated */
+.playful .bg-\[rgba\(0\,143\,240\,0\.1\)\],
+.playful .bg-\[rgba\(0\,143\,240\,0\.12\)\] {
+  background-color: rgba(var(--brand-rgb, 0, 143, 240), 0.18);
+}
+
+/* Smooth transition between page hues */
+.playful .bg-\[\#008ff0\],
+.playful .text-\[\#008ff0\],
+.playful .border-\[\#008ff0\] {
+  transition:
+    background-color 300ms ease,
+    color 300ms ease,
+    border-color 300ms ease;
+}
+
+/* ════════ Dark surfaces ════════ */
+
+.dark .bg-white {
+  background-color: #16242f;
+}
+.dark .bg-\[\#f5f5f7\] {
+  background-color: #1e2e3a;
+}
+.dark .hover\:bg-white:hover {
+  background-color: #16242f;
+}
+.dark .bg-white\/90 {
+  background-color: rgba(22, 36, 47, 0.9);
+}
+.dark .bg-white\/95 {
+  background-color: rgba(22, 36, 47, 0.95);
+}
+
+/* Glass - subtler on a dark background */
+.dark .bg-white\/30 {
+  background-color: rgba(255, 255, 255, 0.06);
+}
+.dark .border-white\/50 {
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+/* ── Text ── */
+.dark .text-\[\#171c23\],
+.dark .text-\[\#122736\] {
+  color: #eaf0f5;
+}
+.dark .text-\[rgba\(23\,28\,35\,0\.62\)\] {
+  color: rgba(234, 240, 245, 0.64);
+}
+.dark .text-\[rgba\(23\,28\,35\,0\.5\)\] {
+  color: rgba(234, 240, 245, 0.52);
+}
+.dark .text-\[rgba\(23\,28\,35\,0\.4\)\] {
+  color: rgba(234, 240, 245, 0.42);
+}
+.dark .placeholder\:text-\[rgba\(23\,28\,35\,0\.4\)\]::placeholder {
+  color: rgba(234, 240, 245, 0.42);
+}
+
+/* Semantic colours - lightened for legibility on dark */
+.dark .text-\[\#4e9400\] {
+  color: #93da3a;
+}
+.dark .text-\[\#e07000\] {
+  color: #f5a253;
+}
+.dark .text-\[\#c43c3c\] {
+  color: #e57575;
+}
+
+/* ── Dividers and borders ── */
+.dark .border-\[rgba\(23\,28\,35\,0\.05\)\] {
+  border-color: rgba(255, 255, 255, 0.06);
+}
+.dark .border-\[rgba\(23\,28\,35\,0\.06\)\] {
+  border-color: rgba(255, 255, 255, 0.07);
+}
+.dark .border-\[rgba\(23\,28\,35\,0\.08\)\] {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+.dark .border-\[rgba\(23\,28\,35\,0\.1\)\] {
+  border-color: rgba(255, 255, 255, 0.13);
+}
+.dark .border-\[rgba\(23\,28\,35\,0\.12\)\] {
+  border-color: rgba(255, 255, 255, 0.16);
+}
+.dark .border-\[rgba\(23\,28\,35\,0\.25\)\] {
+  border-color: rgba(255, 255, 255, 0.3);
+}
+.dark .border-\[rgba\(23\,28\,35\,0\.3\)\] {
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+/* ── Ink backgrounds (neutral tags, switch off, handles) ── */
+.dark .bg-\[rgba\(23\,28\,35\,0\.06\)\] {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+.dark .bg-\[rgba\(23\,28\,35\,0\.08\)\] {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+.dark .hover\:bg-\[rgba\(23\,28\,35\,0\.08\)\]:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+}
+.dark .bg-\[rgba\(23\,28\,35\,0\.1\)\] {
+  background-color: rgba(255, 255, 255, 0.12);
+}
+.dark .bg-\[rgba\(23\,28\,35\,0\.15\)\] {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+.dark .bg-\[rgba\(23\,28\,35\,0\.2\)\] {
+  background-color: rgba(255, 255, 255, 0.25);
+}
+.dark .bg-\[rgba\(23\,28\,35\,0\.3\)\] {
+  background-color: rgba(255, 255, 255, 0.35);
+}
+
+/* Letter tag on an answer card - opaque in the border colour */
+.dark .bg-\[\#e3e4e5\] {
+  background-color: #2a3a47;
+}
+
+/* Semi-circular gauge track - lighter on a dark surface */
+.dark {
+  --gauge-track: rgba(255, 255, 255, 0.1);
+}
+
+/* Details check chat - message entrance and typing dots */
+@keyframes chat-rise {
+  from { opacity: 0; transform: translateY(8px); }
+}
+@keyframes chat-bounce {
+  0%, 60%, 100% { transform: translateY(0); opacity: .4; }
+  30% { transform: translateY(-5px); opacity: 1; }
+}
+
+/* Dark layer over the hero images - darker in dark mode */
+.hero-overlay {
+  background-color: rgba(13, 25, 37, 0.55);
+}
+.dark .hero-overlay {
+  background-color: rgba(13, 25, 37, 0.75);
+}
+
+/* Clear glass - a card sitting on a dark image: even light coating and a thin edge */
+.photo-glass {
+  position: relative;
+  border-radius: 20px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.26),
+    rgba(255, 255, 255, 0.14)
+  );
+  -webkit-backdrop-filter: blur(12px) saturate(1.5);
+  backdrop-filter: blur(12px) saturate(1.5);
+}
+
+/* In dark mode - the same glass in the dark theme's card colour */
+.dark .photo-glass {
+  background: linear-gradient(
+    135deg,
+    rgba(22, 36, 47, 0.62),
+    rgba(22, 36, 47, 0.42)
+  );
+}
+
+/* The edge catches light at two opposite corners and fades in the middle */
+.photo-glass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  pointer-events: none;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.6),
+    rgba(255, 255, 255, 0.12) 45%,
+    rgba(255, 255, 255, 0.12) 60%,
+    rgba(255, 255, 255, 0.4)
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box exclude,
+    linear-gradient(#000 0 0);
+}
+
+/* In dark mode the edge and dividers are subtler */
+.dark .photo-glass::before {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.28),
+    rgba(255, 255, 255, 0.06) 45%,
+    rgba(255, 255, 255, 0.06) 60%,
+    rgba(255, 255, 255, 0.18)
+  );
+}
+.dark .photo-glass .bg-white\/25 {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Large numbers only - Inter, with a fallback font if text appears in the same field */
+.stat-number {
+  font-family: "Inter", "Noto Sans", sans-serif;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ════════ Mobile bottom sheet ════════ */
+
+/* Layer behind the sheet - dims the page so the sheet stands out */
+.app-sheet-backdrop {
+  background-color: rgba(13, 25, 37, 0.5);
+}
+.dark .app-sheet-backdrop {
+  background-color: rgba(5, 10, 16, 0.6);
+}
+
+/* In dark mode - dark blue glass with a glowing top edge */
+.dark .app-sheet {
+  border-radius: 28px 28px 0 0;
+  background: linear-gradient(
+    180deg,
+    rgba(32, 50, 66, 0.86),
+    rgba(14, 24, 33, 0.94)
+  );
+  -webkit-backdrop-filter: blur(24px) saturate(1.4);
+  backdrop-filter: blur(24px) saturate(1.4);
+  box-shadow:
+    0 -14px 44px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+.dark .app-sheet-handle {
+  background-color: rgba(255, 255, 255, 0.28);
+}
+
+/* Inner surfaces - transparent groups with a subtle border */
+.dark .app-sheet .bg-\[\#f5f5f7\],
+.dark .app-sheet .bg-white {
+  background-color: rgba(255, 255, 255, 0.05);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+/* Close button - glass circle */
+.dark .app-sheet button[aria-label="Close"] {
+  border-radius: 9999px;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 0.07);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+}
+
+/* Calendar - subtle border for month buttons in dark mode */
+.dark .app-calendar button[name$="-month"] {
+  border-color: rgba(255, 255, 255, 0.14);
+  opacity: 0.85;
+}
+
+/* Bottom-sheet footer buttons - large and full width, easy to tap */
+.app-sheet-footer button {
+  flex: 1 1 0;
+  justify-content: center;
+  min-height: 46px;
+  padding-inline: 16px;
+  font-size: 15px;
+}
+
+/* On mobile the main actions on the booking card are large and easy to tap */
+@media (max-width: 767px) {
+  .app-card-actions > button {
+    flex: 1 1 0;
+    justify-content: center;
+    min-height: 46px;
+    padding-inline: 12px;
+    font-size: 14px;
+  }
+}
+
+/* Even, smaller gap between the hero image and the page content */
+.page-hero + main > section:first-child {
+  padding-top: 20px;
+}
+
+/* ════════ Accessibility ════════ */
+
+/* Secondary text - opacity that meets a 4.5:1 contrast ratio */
+.text-\[\#171c23\].opacity-50,
+.text-\[\#171c23\].opacity-60 {
+  opacity: 0.68;
+}
+.text-\[rgba\(23\,28\,35\,0\.4\)\],
+.placeholder\:text-\[rgba\(23\,28\,35\,0\.4\)\]::placeholder {
+  color: rgba(23, 28, 35, 0.68);
+}
+.dark .text-\[rgba\(23\,28\,35\,0\.4\)\],
+.dark .placeholder\:text-\[rgba\(23\,28\,35\,0\.4\)\]::placeholder {
+  color: rgba(234, 240, 245, 0.68);
+}
+
+/* Clear focus ring for keyboard navigation */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex="0"]:focus-visible {
+  outline: 2px solid var(--brand, #006bbf);
+  outline-offset: 2px;
+}
+header button:focus-visible,
+header a:focus-visible,
+header input:focus-visible {
+  outline-color: #ffffff;
+}
