@@ -25,6 +25,10 @@ import {
   ProgressBar,
   ProgressRing,
 } from "./primitives";
+import {
+  ExportPdfButton,
+  type PdfCell,
+} from "./pdfExport";
 
 /**
  * Pattern reasoning test - "Complete the pattern".
@@ -1208,6 +1212,35 @@ export default function EntryAssessmentRunner({
     const score = Math.round(
       (correctCount / questionCount) * 100,
     );
+
+    /** Every answer the applicant gave in the test - one row per question, to export to PDF */
+    const answerRows: PdfCell[][] = questions.map((q, i) => {
+      const choice = picked[i];
+      const row: PdfCell[] = [
+        i + 1,
+        "Complete the pattern",
+        choice === null ? "No answer" : OPTION_LETTERS[choice],
+        OPTION_LETTERS[q.correct],
+        graded[i] === "correct"
+          ? "Correct"
+          : graded[i] === "wrong"
+            ? "Wrong"
+            : "No answer",
+      ];
+      // A timed test also shows how long each question took
+      if (secondsPerQuestion)
+        row.push(secondsPerQuestion - remaining[i]);
+      return row;
+    });
+
+    const answerColumns = [
+      "Question",
+      "Question type",
+      "Your answer",
+      "Correct answer",
+      "Result",
+      ...(secondsPerQuestion ? ["Time taken (seconds)"] : []),
+    ];
     body = (
       <div className="flex flex-col gap-4">
         {/* Main card: score ring and next actions */}
@@ -1240,6 +1273,35 @@ export default function EntryAssessmentRunner({
               <Eye size={15} className="shrink-0" />
               View questions
             </Button>
+            {/* Export every answer the applicant gave in the test */}
+            <ExportPdfButton
+              questionnaire={testName}
+              columns={answerColumns}
+              rows={answerRows}
+              meta={[
+                ["Topic", topicName],
+                ["Overall score", score],
+                ["Correct answers", correctCount],
+                ["Wrong answers", wrongCount],
+                [
+                  "Time taken",
+                  duration !== undefined
+                    ? fmtDuration(duration)
+                    : "—",
+                ],
+              ]}
+              extraTables={
+                attempts.length > 0
+                  ? [
+                      {
+                        title: "Previous attempts",
+                        columns: ["Date", "Score"],
+                        rows: attempts.map((a) => [a.date, a.score]),
+                      },
+                    ]
+                  : []
+              }
+            />
           </div>
         </div>
 

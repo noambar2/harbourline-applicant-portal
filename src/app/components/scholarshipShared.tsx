@@ -1,5 +1,9 @@
 import { Check, ChevronRight, GraduationCap, Info } from "lucide-react";
-import { IconCircle } from "./primitives";
+import { IconCircle, type ButtonVariant } from "./primitives";
+import {
+  ExportPdfButton,
+  type PdfCell,
+} from "./pdfExport";
 import { DECLARATIONS } from "./scholarshipData";
 
 /** Parts shared by the survey versions - the intro screen, declarations, finish screen and progress bar */
@@ -159,7 +163,68 @@ export function DeclarationsBlock({
   );
 }
 
-export function SuccessScreen() {
+// ── Export the answers to PDF ───────────────────────────────────────────────
+
+/** One preference in the survey - a course and the institutions chosen for it, in order */
+export interface ScholarshipChoiceSummary {
+  name: string;
+  cluster?: string;
+  institutions: string[];
+}
+
+/** One row per institution, under the preference it was chosen for */
+export function scholarshipAnswerRows(
+  choices: ScholarshipChoiceSummary[],
+): PdfCell[][] {
+  return choices.flatMap((choice, i) =>
+    choice.institutions.map((institution, j) => [
+      i + 1,
+      choice.name,
+      choice.cluster ?? "",
+      j + 1,
+      institution,
+    ]),
+  );
+}
+
+/**
+ * Exports all of the applicant's choices in the scholarship survey to PDF -
+ * shared by the three survey versions, on the summary and the confirmation screen.
+ */
+export function ScholarshipExportButton({
+  choices,
+  variant = "outline",
+  label,
+}: {
+  choices: ScholarshipChoiceSummary[];
+  variant?: ButtonVariant;
+  label?: string;
+}) {
+  return (
+    <ExportPdfButton
+      questionnaire="Scholarship survey"
+      columns={[
+        "Preference",
+        "Course",
+        "Study area",
+        "Institution preference",
+        "Institution",
+      ]}
+      rows={scholarshipAnswerRows(choices)}
+      countLabel="Rows"
+      meta={[["Preferences", choices.length]]}
+      variant={variant}
+      label={label}
+    />
+  );
+}
+
+export function SuccessScreen({
+  choices,
+}: {
+  /** The choices that were sent - to export to PDF from the confirmation screen */
+  choices?: ScholarshipChoiceSummary[];
+}) {
   return (
     <div className="flex flex-col items-center gap-4 py-14 text-center">
       <IconCircle size={72} bg="rgba(105,198,0,0.12)" color="#69c600">
@@ -173,6 +238,13 @@ export function SuccessScreen() {
         Your choices have been saved and passed on to the Scholars Program
         selection team. Updates on next steps will be sent to Messages in My profile.
       </p>
+      {choices && choices.length > 0 && (
+        <ScholarshipExportButton
+          choices={choices}
+          variant="tint"
+          label="Export answers to PDF"
+        />
+      )}
     </div>
   );
 }

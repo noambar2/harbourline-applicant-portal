@@ -27,6 +27,7 @@ import {
   Track,
 } from "./scholarshipData";
 import {
+  ScholarshipExportButton,
   DeclarationsBlock,
   IntroScreen,
   ProgressSteps,
@@ -502,6 +503,16 @@ export default function ScholarshipSurveySheet({
 
   const allAgreed = agreed.every(Boolean);
 
+  /** The choices as exported to PDF - preference, course and institutions */
+  const summaryChoices = filledSlots.map((slot) => {
+    const track = trackById(slot.trackId!);
+    return {
+      name: track.name,
+      cluster: track.cluster,
+      institutions: slot.institutions,
+    };
+  });
+
   const submit = () => {
     if (!allAgreed) {
       setSummaryError("To send the survey, please confirm all the declarations");
@@ -697,6 +708,11 @@ export default function ScholarshipSurveySheet({
               </p>
             </StepHeading>
 
+            {/* Export all the answers to a PDF */}
+            <div className="flex">
+              <ScholarshipExportButton choices={summaryChoices} />
+            </div>
+
             <div className="flex flex-col gap-3">
               {filledSlots.map((slot, i) => {
                 const track = trackById(slot.trackId!);
@@ -752,7 +768,9 @@ export default function ScholarshipSurveySheet({
           </div>
         )}
 
-        {step === "success" && <SuccessScreen />}
+        {step === "success" && (
+          <SuccessScreen choices={summaryChoices} />
+        )}
       </div>
 
       {/* Bottom navigation bar */}

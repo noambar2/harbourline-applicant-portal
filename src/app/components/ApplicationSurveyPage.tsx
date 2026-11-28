@@ -14,6 +14,10 @@ import {
   FormTopBar,
   IconCircle,
 } from "./primitives";
+import {
+  ExportPdfButton,
+  type PdfCell,
+} from "./pdfExport";
 
 /**
  * Application survey - one step per topic, and each application-day step
@@ -648,6 +652,29 @@ export default function ApplicationSurveyPage({
 
   const last = step === STEPS.length - 1;
 
+  /** Every answer the applicant gave in the survey - one row per question, to export to PDF */
+  const answerRows: PdfCell[][] = QUESTIONS.map(
+    (question, index) => {
+      const answer = answers[index] ?? {};
+      const value = answer.value;
+      // Scale questions also show what the score means next to the number
+      const text =
+        value &&
+        (question.type === "scale1to5" ||
+          question.type === "slider") &&
+        SCALE_LABELS[Number(value)]
+          ? `${value} - ${SCALE_LABELS[Number(value)]}`
+          : (value ?? "Not answered");
+      return [
+        SPEC_NUMBERS[index] ?? "Gate",
+        question.section,
+        question.text,
+        text,
+        answer.detail ?? "",
+      ];
+    },
+  );
+
   const submit = () => {
     draftStore.answers = {};
     draftStore.step = 0;
@@ -681,6 +708,20 @@ export default function ApplicationSurveyPage({
               Admissions Centre and application day for future
               applicants.
             </p>
+            {/* Export all the answers that were sent to a PDF */}
+            <ExportPdfButton
+              questionnaire="Application survey"
+              columns={[
+                "Question",
+                "Step",
+                "Question text",
+                "Your answer",
+                "Details",
+              ]}
+              rows={answerRows}
+              variant="tint"
+              label="Export answers to PDF"
+            />
           </div>
 
           {/* Article cards - each step in the process with a short summary and a link */}

@@ -18,6 +18,7 @@ import {
   MIN_TRACKS,
 } from "./scholarshipData";
 import {
+  ScholarshipExportButton,
   DeclarationsBlock,
   IntroScreen,
   ProgressSteps,
@@ -170,6 +171,16 @@ export default function ScholarshipSurveySimple({
     filledRows.length >= MIN_TRACKS && partialRows.length === 0;
 
   const allAgreed = agreed.every(Boolean);
+
+  /** The choices as exported to PDF - preference, course and institutions */
+  const summaryChoices = filledRows.map((row) => {
+    const track = trackByName(row.trackName!);
+    return {
+      name: track?.name ?? row.trackName!,
+      cluster: track?.cluster,
+      institutions: row.institutions.filter(Boolean) as string[],
+    };
+  });
 
   const submit = () => {
     if (!allAgreed) {
@@ -377,6 +388,11 @@ export default function ScholarshipSurveySimple({
               </p>
             </StepHeading>
 
+            {/* Export all the answers to a PDF */}
+            <div className="flex">
+              <ScholarshipExportButton choices={summaryChoices} />
+            </div>
+
             {/* Table view - each course with its chosen institutions */}
             <div className="rounded-[10px] border border-[rgba(23,28,35,0.1)] overflow-hidden">
               <div className="hidden sm:grid grid-cols-[48px_1fr_1.2fr] bg-[#f5f5f7] text-[#171c23] text-[13px] font-semibold">
@@ -447,7 +463,9 @@ export default function ScholarshipSurveySimple({
         )}
 
         {/* ── Sent confirmation screen ── */}
-        {step === "success" && <SuccessScreen />}
+        {step === "success" && (
+          <SuccessScreen choices={summaryChoices} />
+        )}
       </div>
 
       {/* Bottom navigation bar */}

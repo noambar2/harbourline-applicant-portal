@@ -28,6 +28,7 @@ import {
   MIN_TRACKS,
   Track,
 } from "./scholarshipData";
+import { ScholarshipExportButton } from "./scholarshipShared";
 
 
 // ── Shared bits ─────────────────────────────────────────────────────────────
@@ -467,6 +468,16 @@ export default function ScholarshipSurveyDetailed({
   const trackById = (id: string) =>
     ALL_TRACKS.find((t) => t.id === id)!;
 
+  /** The choices as exported to PDF - preference, course and institutions */
+  const summaryChoices = choices.map((choice) => {
+    const track = trackById(choice.trackId);
+    return {
+      name: track.name,
+      cluster: track.cluster,
+      institutions: choice.institutions,
+    };
+  });
+
   const showProgress = step === 1 || step === 2 || step === 3;
 
   return (
@@ -787,6 +798,11 @@ export default function ScholarshipSurveyDetailed({
               </p>
             </StepHeading>
 
+            {/* Export all the answers to a PDF */}
+            <div className="flex">
+              <ScholarshipExportButton choices={summaryChoices} />
+            </div>
+
             <div className="flex flex-col gap-3">
               {choices.map((choice, i) => {
                 const track = trackById(choice.trackId);
@@ -887,6 +903,13 @@ export default function ScholarshipSurveyDetailed({
               Scholars Program selection team. Updates on next steps
               will be sent to Messages in My profile.
             </p>
+            {summaryChoices.length > 0 && (
+              <ScholarshipExportButton
+                choices={summaryChoices}
+                variant="tint"
+                label="Export answers to PDF"
+              />
+            )}
           </div>
         )}
       </div>

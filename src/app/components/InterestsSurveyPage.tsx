@@ -13,6 +13,10 @@ import {
   Check,
   Send,
 } from "lucide-react";
+import {
+  ExportPdfButton,
+  type PdfCell,
+} from "./pdfExport";
 
 // ── Options ─────────────────────────────────────────────────────────────────
 
@@ -220,7 +224,11 @@ function IntroContent() {
   );
 }
 
-function SuccessContent() {
+function SuccessContent({
+  answers,
+}: {
+  answers: PdfCell[][];
+}) {
   return (
     <div className="flex flex-col items-center gap-4 py-14 text-center">
       <IconCircle size={64} bg="rgba(105,198,0,0.12)" color="#69c600">
@@ -234,6 +242,14 @@ function SuccessContent() {
         Thanks for taking part! Your answers have been saved and
         passed on to the admissions team
       </p>
+      {/* Export the answers that were sent - for the applicant to keep */}
+      <ExportPdfButton
+        questionnaire="Interests survey"
+        columns={["#", "Question", "Answer"]}
+        rows={answers}
+        variant="tint"
+        label="Export answers to PDF"
+      />
     </div>
   );
 }
@@ -263,10 +279,24 @@ export default function InterestsSurveyPage({
   const [volunteered, setVolunteered] = useState<YesNo | null>(
     null,
   );
-  const [domain, setDomain] = useState<string | null>(null);
-  const [controlLevel, setControlLevel] = useState<number | null>(
-    null,
-  );
+  /** Several skills can be chosen, each with its own level */
+  const [domains, setDomains] = useState<string[]>([]);
+  const [controlLevels, setControlLevels] = useState<
+    Record<string, number>
+  >({});
+
+  const setDomainLevel = (domain: string, level: number) =>
+    setControlLevels((prev) => ({ ...prev, [domain]: level }));
+
+  /** Changing the selection - levels of removed skills are cleared */
+  const changeDomains = (next: string[]) => {
+    setDomains(next);
+    setControlLevels((prev) =>
+      Object.fromEntries(
+        Object.entries(prev).filter(([name]) => next.includes(name)),
+      ),
+    );
+  };
 
   const step1Valid =
     hobby !== null &&
@@ -276,8 +306,48 @@ export default function InterestsSurveyPage({
 
   const step2Valid =
     volunteered !== null &&
-    domain !== null &&
-    controlLevel !== null;
+    domains.length > 0 &&
+    domains.every((name) => controlLevels[name] !== undefined);
+
+  /** Every answer in the survey, to export to PDF - questions that weren't shown are left out */
+  const answerRows: PdfCell[][] = (
+    [
+      ["What do you like to do in your free time?", hobby],
+      hobby
+        ? [
+            `Years of experience in ${hobby === "Other" ? "this interest" : hobby.toLowerCase()}`,
+            experience,
+          ]
+        : null,
+      [
+        "Have you been a youth group leader or coach for a year or more?",
+        wasCounselor,
+      ],
+      wasCounselor === "Yes"
+        ? ["Number of years as a leader or coach", counselorYears]
+        : null,
+      ["Have you volunteered or held a role in your community?", volunteered],
+      [
+        "Skills",
+        domains.length ? domains.join(", ") : null,
+      ],
+      ...domains.map(
+        (name) =>
+          [
+            `Level in ${name} (1-5)`,
+            controlLevels[name] ?? null,
+          ] as [string, PdfCell],
+      ),
+    ] as ([string, PdfCell] | null)[]
+  )
+    .filter((row): row is [string, PdfCell] => row !== null)
+    .map(([question, value], i) => [
+      i + 1,
+      question,
+      value === null || value === undefined || value === ""
+        ? "Not answered"
+        : value,
+    ]);
 
   const showProgress = step === 1 || step === 2;
 
@@ -392,32 +462,36 @@ export default function InterestsSurveyPage({
 
             <div>
               <FieldLabel>
-                Choose a skill you have and rate your level
+                Choose the skills you have and rate your level
               </FieldLabel>
               <SelectField
-                value={domain}
-                placeholder="Choose a skill"
+                multiple
+                value={domains}
+                placeholder="Choose one or more skills"
                 options={DOMAIN_OPTIONS}
-                onChange={(value) => {
-                  setDomain(value);
-                  setControlLevel(null);
-                }}
+                onChange={changeDomains}
               />
+              <p className="text-[#171c23] text-[13px] opacity-55 mt-1.5 text-left">
+                You can choose more than one skill
+              </p>
             </div>
 
-            {domain && (
-              <div>
-                <FieldLabel>{domain}</FieldLabel>
+            {/* A separate level scale for each chosen skill */}
+            {domains.map((name) => (
+              <div key={name}>
+                <FieldLabel>{name}</FieldLabel>
                 <ControlScale
-                  value={controlLevel}
-                  onChange={setControlLevel}
+                  value={controlLevels[name] ?? null}
+                  onChange={(level) => setDomainLevel(name, level)}
                 />
               </div>
-            )}
+            ))}
           </div>
         )}
 
-        {step === "success" && <SuccessContent />}
+        {step === "success" && (
+          <SuccessContent answers={answerRows} />
+        )}
       </div>
 
       {/* Sticky footer - the nav buttons are always visible at the bottom */}
